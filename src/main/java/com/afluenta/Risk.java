@@ -23,15 +23,29 @@ public class Risk {
 		double cuotaPromedio = rFindDoubleDelimitedBy(data, "\n$", "\nCuota");
 		double ingresoInferido = rFindDoubleDelimitedBy(data, "Ingresoinferido$", "\nCompromiso");
 		double compromisoMensual = findDoubleDelimitedBy(data, "Compromisomensual$", "\n");
+		double riesgo = (plazo * cuotaPromedio) / (ingresoInferido - compromisoMensual);
 
-		System.out.println("=======================================");
-		System.out.println("Plazo: " + plazo);
-		System.out.println("Cuota promedio: " + cuotaPromedio);
-		System.out.println("Ingreso inferido: " + ingresoInferido);
-		System.out.println("Compromiso mensual: " + compromisoMensual);
-		System.out.println("---------------------------------------");
-		System.out.println("RIESGO: " + (cuotaPromedio * plazo) / (ingresoInferido - compromisoMensual));
-		System.out.println("=======================================");
+		StringBuilder scriptCmd = new StringBuilder();
+		scriptCmd.append("display notification \"Plazo: ");
+		scriptCmd.append(formatLargeDouble(plazo));
+		scriptCmd.append("\t\t\tCuota: ");
+		scriptCmd.append(formatLargeDouble(cuotaPromedio));
+		scriptCmd.append("\nIngreso: ");
+		scriptCmd.append(formatLargeDouble(ingresoInferido));
+		scriptCmd.append("\tCompromiso: ");
+		scriptCmd.append(formatLargeDouble(compromisoMensual));
+		scriptCmd.append("\" with title \"RIESGO AFLUENTA: ");
+		scriptCmd.append(formatSmallDouble(riesgo));
+		scriptCmd.append("\"");
+
+		System.out.println(scriptCmd.toString());
+
+		String [] cmd = {"osascript", "-e", scriptCmd.toString()};
+		try {
+			Runtime.getRuntime().exec(cmd);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
 

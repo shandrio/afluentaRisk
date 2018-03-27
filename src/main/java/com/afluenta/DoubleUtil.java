@@ -6,15 +6,25 @@ import java.text.ParseException;
 import java.util.Locale;
 
 public final class DoubleUtil {
-	
+
+	private static final DecimalFormatSymbols SYMBOLS = new DecimalFormatSymbols(Locale.GERMANY);
+
 	public static Double getDouble(String number) {
 		try {
-			return new DecimalFormat("###,###.##", new DecimalFormatSymbols(Locale.GERMANY)).parse(number)
+			return new DecimalFormat("###,###.##", SYMBOLS).parse(number)
 					.doubleValue();
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return Double.NaN;
 		}
+	}
+
+	public static String formatSmallDouble(double number) {
+		return new DecimalFormat("#.00", SYMBOLS).format(number);
+	}
+
+	public static String formatLargeDouble(double number) {
+		return new DecimalFormat("###,###", SYMBOLS).format(number);
 	}
 
 	public static double lFindDoubleDelimitedBy(String source, String right, int left) {
